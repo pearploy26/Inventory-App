@@ -1,0 +1,22 @@
+{
+  "name": "inventory-app",
+  "version": "1.0.0",
+  "description": "เว็บแอปพลิเคชันจัดการสินค้าคงคลัง (Express + SQLite)",
+  "main": "server/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js --watch server"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

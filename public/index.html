@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ระบบจัดการสินค้าคงคลัง</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>ระบบจัดการสินค้าคงคลัง</h1>
+    <button id="btn-new" class="primary">+ เพิ่มสินค้า</button>
+  </header>
+
+  <main>
+    <section class="summary" id="summary">
+      <div class="tile"><span>รายการสินค้า</span><strong id="s-products">–</strong></div>
+      <div class="tile"><span>จำนวนรวม (หน่วย)</span><strong id="s-units">–</strong></div>
+      <div class="tile"><span>มูลค่าคงคลัง (บาท)</span><strong id="s-value">–</strong></div>
+      <div class="tile warn"><span>ใกล้หมด</span><strong id="s-low">–</strong></div>
+    </section>
+
+    <section class="toolbar">
+      <input id="search" type="search" placeholder="ค้นหาชื่อหรือรหัสสินค้า" />
+      <select id="filter-category"><option value="">ทุกหมวดหมู่</option></select>
+      <label class="check"><input type="checkbox" id="filter-low" /> เฉพาะสินค้าใกล้หมด</label>
+      <button id="btn-categories">จัดการหมวดหมู่</button>
+    </section>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>รหัส</th><th>ชื่อสินค้า</th><th>หมวดหมู่</th>
+            <th class="num">คงเหลือ</th><th class="num">จุดสั่งซื้อ</th><th class="num">ราคา/หน่วย</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="product-rows"></tbody>
+      </table>
+      <p id="empty" class="empty" hidden>ไม่พบสินค้า</p>
+    </div>
+  </main>
+
+  <!-- ฟอร์มเพิ่ม/แก้ไขสินค้า -->
+  <dialog id="product-dialog">
+    <form id="product-form" method="dialog">
+      <h2 id="product-dialog-title">เพิ่มสินค้า</h2>
+      <div class="grid">
+        <label>รหัสสินค้า (SKU)<input name="sku" required /></label>
+        <label>ชื่อสินค้า<input name="name" required /></label>
+        <label>หมวดหมู่<select name="category_id" id="form-category"></select></label>
+        <label>หน่วยนับ<input name="unit" value="ชิ้น" /></label>
+        <label>จำนวนเริ่มต้น<input name="quantity" type="number" min="0" step="1" value="0" /></label>
+        <label>จุดสั่งซื้อ (min stock)<input name="min_stock" type="number" min="0" step="1" value="0" /></label>
+        <label>ราคาต่อหน่วย (บาท)<input name="price" type="number" min="0" step="0.01" value="0" /></label>
+      </div>
+      <p class="error" id="product-error"></p>
+      <div class="actions">
+        <button type="button" data-close>ยกเลิก</button>
+        <button type="submit" class="primary">บันทึก</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- รับเข้า/เบิกออก + ประวัติ -->
+  <dialog id="stock-dialog">
+    <form id="stock-form" method="dialog">
+      <h2 id="stock-title">ปรับสต็อก</h2>
+      <p class="muted" id="stock-current"></p>
+      <div class="grid">
+        <label>ประเภท
+          <select name="type"><option value="IN">รับเข้า</option><option value="OUT">เบิกออก</option></select>
+        </label>
+        <label>จำนวน<input name="quantity" type="number" min="1" step="1" required /></label>
+        <label class="wide">หมายเหตุ<input name="note" placeholder="เช่น เลขที่ใบสั่งซื้อ" /></label>
+      </div>
+      <p class="error" id="stock-error"></p>
+      <div class="actions">
+        <button type="button" data-close>ปิด</button>
+        <button type="submit" class="primary">บันทึก</button>
+      </div>
+      <h3>ประวัติล่าสุด</h3>
+      <ul id="movements" class="movements"></ul>
+    </form>
+  </dialog>
+
+  <!-- หมวดหมู่ -->
+  <dialog id="category-dialog">
+    <form id="category-form" method="dialog">
+      <h2>หมวดหมู่สินค้า</h2>
+      <ul id="category-list" class="movements"></ul>
+      <div class="inline">
+        <input name="name" placeholder="ชื่อหมวดหมู่ใหม่" />
+        <button type="submit" class="primary">เพิ่ม</button>
+      </div>
+      <p class="error" id="category-error"></p>
+      <div class="actions"><button type="button" data-close>ปิด</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
